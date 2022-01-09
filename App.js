@@ -16,21 +16,26 @@ export default function App() {
     const [wordData, setWordData] = useState([]);
     // const [definitionsList, setDefList] = useState([]);
 
-    let newDefList = [[], []];
+    // let newDefList = [[], []];
+    let newDefList = [];
+
+    // newDefList[0] = [];
+    // newDefList[0][0] = [];
+    // newDefList[0][0][0] = [];
 
     const endpoint = 'entries';
     const languageCode = 'en';
-    let wordID = 'test';
+    let wordID = 'broken';
     // still bugs out for certian words (needs fix)
 
 
     const searchWord = () => {
 
-        console.log("click");
+        // console.log("click");
 
         let ApiCall = `https://api.dictionaryapi.dev/api/v2/${endpoint}/${languageCode}/${wordID}`;
 
-        console.log("Pre-1");
+        // console.log("Pre-1");
 
         axios.get(ApiCall)
             .then(response => {
@@ -40,56 +45,77 @@ export default function App() {
     }
 
     const defSorter = (id) => {
-        console.log("S1");
+        // console.log("S1");
+        //
+        // console.log("Passed ID: " + id);
 
-        console.log("Passed ID: " + id);
+        console.log("KEOWF " + id);
+        console.log(newDefList);
+        console.log(newDefList[id]);
 
         return newDefList[id].map((item, key) => {
-            console.log("S2");
-            console.log("ID: " + id + "  Passed Key: " + key);
-            console.log(newDefList);
+            // console.log("S2");
+            // console.log("ID: " + id + "  Passed Key: " + key);
+            // console.log(newDefList);
             return (
-                <Text key={key}>{newDefList[id][key]} {'\n'}</Text>
+                <Text>
+                    <Text key={key}>{'\n'}L0EX: {newDefList[id][key][0]}</Text>
+                    {newDefList[id][key][1] ? <Text>{'\n'} L1Ex: {newDefList[id][key][1]}</Text> : null}
+                    {newDefList[id][key][2].length ? <Text>{'\n'} L2Ex: {newDefList[id][key][2]}</Text> : null}
+                    {newDefList[id][key][3].length ? <Text>{'\n'} L3Ex: {newDefList[id][key][3]}</Text> : null}
+                </Text>
             )
+
+            // return(<Text>Hey</Text>);
         })
     }
 
-    // const wordTensesScaffold = (item) => {
-    //
-    //     console.log("TENSES");
-    //
-    //     return item['meanings'].map((mapped, index) => {
-    //         console.log("TENSES1");
-    //         return (
-    //             <View style={styles.wordDef} key={key}>
-    //                 <Text style={[styles.wordInfo, styles.word]}>{item['word']}</Text>
-    //                 <Text style={styles.wordInfo}>{item['meanings'][0]['partOfSpeech']}</Text>
-    //                 {/*<Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['definition']}</Text>*/}
-    //                 <Text style={styles.wordInfo}>
-    //                     {defSorter(key)}
-    //                 </Text>
-    //
-    //                 <Text style={styles.wordInfo}>{item['phonetic']}</Text>
-    //                 <Text style={styles.wordInfo}>{mapped[0]['definitions'][0]['example']}</Text>
-    //                 <Text style={styles.wordInfo}>{mapped[0]['definitions'][0]['antonyms']}</Text>
-    //                 <Text style={styles.wordInfo}>{mapped[0]['definitions'][0]['synonyms']}</Text>
-    //                 <Text style={styles.wordInfo}>{item['origin']}</Text>
-    //             </View>
-    //         )
-    //     })
+    const wordTensesScaffold = (item, key) => {
+
+        // console.log("TENSES");
+
+        return (
+            <View style={styles.wordDef}>
+                <Text style={[styles.wordInfo, styles.word]}>{item['word']}</Text>
+                <Text style={styles.wordInfo}>{item['meanings'][0]['partOfSpeech']}</Text>
+                {/*<Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['definition']}</Text>*/}
+                <Text style={styles.wordInfo}>
+                    {defSorter(key)}
+                </Text>
+
+                <Text style={styles.wordInfo}>{item['phonetic']}</Text>
+                {/*<Text style={styles.wordInfo}>{mapped[0]['definitions'][0]['example']}</Text>*/}
+                {/*<Text style={styles.wordInfo}>{mapped[0]['definitions'][0]['antonyms']}</Text>*/}
+                {/*<Text style={styles.wordInfo}>{mapped[0]['definitions'][0]['synonyms']}</Text>*/}
+
+                {/*<Text style={styles.wordInfo}>Ex: {item['meanings'][0]['definitions'][0]['example']}</Text>*/}
+                {/*<Text style={styles.wordInfo}>Antonyms: {item['meanings'][0]['definitions'][0]['antonyms']}</Text>*/}
+                {/*<Text style={styles.wordInfo}>Synonyms: {item['meanings'][0]['definitions'][0]['synonyms']}</Text>*/}
+                {/*<Text style={styles.wordInfo}>Origin: {item['origin']}</Text>*/}
+            </View>
+        )
+    }
 
     const wordDefScaffold = () => {
 
-        console.log("DEF SCAF");
+        // console.log("DEF SCAF");
 
         // let newDefList = [[], []];
         // the above line might be unnesesary and (seems) destructive
 
+        // console.log("wordData");
+        // console.log(wordData);
 
+
+        //below called twice (maybe??);
         return wordData.map((item, key) => {
 
             console.log("ITEM: ");
-            console.log(item);
+            console.log(wordData.length);
+            console.log(wordData[0]['meanings'].length);
+
+            // console.log("ITEM: ");
+            // console.log(item);
 
             // console.log(word);
             // let word = item['meanings'][0]['definitions']['partOfSpeech'];
@@ -97,36 +123,71 @@ export default function App() {
 
 
             for (let i = 0; i < (item['meanings'].length); i++) {
+                if (!newDefList[i]) newDefList[i] = [];
+
+                console.log("I: " + i);
                 for (let j = 0; j < item['meanings'][i]['definitions'].length; j++) {
-                    // newDefList[i] = [];
-                    newDefList[i][j] = item['meanings'][i]['definitions'][j]['definition'];
-                    console.log("TEST: " + i + ":" + j + " " + item['meanings'][i]['definitions'][j]['definition'])
+                    console.log("J: " + j);
+                    if(!newDefList[i][j]) newDefList[i][j] = [];
+
+            // for (let i = 0; i < (wordData.length); i++) {
+            //     if (!newDefList[i]) newDefList[i] = [];
+            //
+            //     console.log("I: " + i);
+            //     for (let j = 0; j < wordData[i]['meanings'].length; j++) {
+            //         console.log("J: " + j);
+            //         if(!newDefList[i][j]) newDefList[i][j] = [];
+
+                    // <Text style={styles.wordInfo}>Ex: {item['meanings'][0]['definitions'][0]['example']}</Text>
+                    // <Text style={styles.wordInfo}>Antonyms: {item['meanings'][0]['definitions'][0]['antonyms']}</Text>
+                    // <Text style={styles.wordInfo}>Synonyms: {item['meanings'][0]['definitions'][0]['synonyms']}</Text>
+                    //
+                    // newDefList[i][j] = item['meanings'][i]['definitions'][j]['definition'];
+
+
+                    // console.log(newDefList);
+                    // console.log("ADDED:")
+                    // console.log(newDefList);
+
+                    console.log("DEF: " + item['meanings'][i]['definitions'][j]['definition']);
+
+                    newDefList[i][j][0] = item['meanings'][i]['definitions'][j]['definition'];
+
+                    newDefList[i][j][1] = item['meanings'][i]['definitions'][j]['example'];
+                    newDefList[i][j][2] = item['meanings'][i]['definitions'][j]['antonyms'];
+                    newDefList[i][j][3] = item['meanings'][i]['definitions'][j]['synonyms'];
+
+
+
+                    // console.log("TEST: " + i + ":" + j + " " + item['meanings'][i]['definitions'][j]['definition'])
 
                     // if(i === (item['meanings'].length) && j === item['meanings'][i]['definitions'].length) {
                     //     setDefList(newDefList);
                     // }
                 }
             }
-            console.log("SetDefList");
-            console.log(newDefList);
+            // console.log("SetDefList");
+            // console.log(newDefList);
 
             // Current return needs to loop over every 'meaning' on item not just one
             return (
-                // <Text>{wordTensesScaffold(item)}</Text>
-                <View style={styles.wordDef} key={key}>
-                    <Text style={[styles.wordInfo, styles.word]}>{item['word']}</Text>
-                    <Text style={styles.wordInfo}>{item['meanings'][0]['partOfSpeech']}</Text>
-                    {/*<Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['definition']}</Text>*/}
-                    <Text style={styles.wordInfo}>
-                        {defSorter(key)}
-                    </Text>
-
-                    <Text style={styles.wordInfo}>{item['phonetic']}</Text>
-                    <Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['example']}</Text>
-                    <Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['antonyms']}</Text>
-                    <Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['synonyms']}</Text>
-                    <Text style={styles.wordInfo}>{item['origin']}</Text>
+                <View>
+                    <Text>{wordTensesScaffold(item, key)}</Text>
                 </View>
+                // <View style={styles.wordDef} key={key}>
+                //     <Text style={[styles.wordInfo, styles.word]}>{item['word']}</Text>
+                //     <Text style={styles.wordInfo}>{item['meanings'][0]['partOfSpeech']}</Text>
+                //     {/*<Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['definition']}</Text>*/}
+                //     <Text style={styles.wordInfo}>
+                //         {defSorter(key)}
+                //     </Text>
+                //
+                //     <Text style={styles.wordInfo}>{item['phonetic']}</Text>
+                //     <Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['example']}</Text>
+                //     <Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['antonyms']}</Text>
+                //     <Text style={styles.wordInfo}>{item['meanings'][0]['definitions'][0]['synonyms']}</Text>
+                //     <Text style={styles.wordInfo}>{item['origin']}</Text>
+                // </View>
             )
         })
     }
