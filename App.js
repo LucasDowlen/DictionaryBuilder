@@ -21,9 +21,7 @@ export default function App() {
 
     const endpoint = 'entries';
     const languageCode = 'en';
-    let wordID = 'less';
-
-    //word 'more' breaks program
+    let wordID = 'more';
 
     const searchWord = () => {
 
@@ -72,7 +70,6 @@ export default function App() {
 
             return (
                 <View key={key}>
-                    {/*key??*/}
                     <Text>{wordTensesScaffold(item, key)}</Text>
                 </View>
                 // <View style={styles.wordDef} key={key}>
@@ -98,7 +95,7 @@ export default function App() {
         console.log("TENSES " + key);
 
         return (
-            <View key={key} style={styles.wordDef}>
+            <View key={key + "1"} style={styles.wordDef}>
                 {/*//key?*/}
                 <Text style={[styles.wordInfo, styles.word]}>{item['word']}</Text>
                 <Text style={styles.wordInfo}>{item['phonetic']}</Text>
@@ -125,18 +122,44 @@ export default function App() {
 
         return newDefList[id].map((item, key) => {
             return (
-                <Text key={key}>
-                    {/*key??*/}
-                    <Text key={key}>{'\n'}Definition: {newDefList[id][key][0]}</Text>
-                    {newDefList[id][key][1] !== undefined && newDefList[id][key][1].length ? <Text>{'\n'} Antonyms: {newDefList[id][key][1]}</Text> : null}
-                    {newDefList[id][key][2] !== undefined && newDefList[id][key][2].length ? <Text>{'\n'} Examples: {newDefList[id][key][2]}</Text> : null}
-                    {newDefList[id][key][3] !== undefined && newDefList[id][key][3].length ? <Text>{'\n'} Synonyms: {newDefList[id][key][3]}</Text> : null}
-                </Text>
+                newDefList[id][key].map((nestedItem, nestedKey) => {
+                    return (
+                        <Text key={JSON.stringify(key) + nestedKey}>
+                            <Text>{'\n'}Definition: {newDefList[id][key][nestedKey][0]}</Text>
+                            {newDefList[id][key][nestedKey][1] !== undefined && newDefList[id][key][nestedKey][1].length ? <Text>{'\n'} Antonyms: {newDefList[id][key][nestedKey][1]}</Text> : null}
+                            {newDefList[id][key][nestedKey][2] !== undefined && newDefList[id][key][nestedKey][2].length ? <Text>{'\n'} Examples: {newDefList[id][key][nestedKey][2]}</Text> : null}
+                            {newDefList[id][key][nestedKey][3] !== undefined && newDefList[id][key][nestedKey][3].length ? <Text>{'\n'} Synonyms: {newDefList[id][key][nestedKey][3]}</Text> : null}
+
+                            {/*{turnListToComponents(newDefList[id][key][1])}*/}
+                        </Text>
+                    )
+                })
+
+                // <Text key={key}>
+                //     key?? {id} {key}
+                //     <Text key={key}>{'\n'}Definition: {newDefList[id][key][0]}</Text>
+                //     {newDefList[id][key][1] !== undefined && newDefList[id][key][1].length ? <Text>{'\n'} Antonyms: {newDefList[id][key][1]}</Text> : null}
+                //     {/*{newDefList[id][key][2] !== undefined && newDefList[id][key][2].length ? <Text>{'\n'} Examples: {newDefList[id][key][0][2]}</Text> : null}*/}
+                //     {/*{newDefList[id][key][3] !== undefined && newDefList[id][key][3].length ? <Text>{'\n'} Synonyms: {newDefList[id][key][0][3]}</Text> : null}*/}
+                //
+                //     {/*{turnListToComponents(newDefList[id][key][1])}*/}
+                // </Text>
             )
 
             // return(<Text>Hey</Text>);
         })
     }
+
+    // const turnListToComponents = (list) => {
+    //     if(list !== undefined && list.length) {
+    //
+    //         return (
+    //             list.map((item, key) => {
+    //                 return <Text>{item}</Text>
+    //             })
+    //         )
+    //     }
+    // }
 
 
     const createList = (key) =>  {
@@ -148,16 +171,20 @@ export default function App() {
         //make list first inclue key value
         //ex: newDefList[key][i][j][-]
 
-        for (let i = 0; i < wordData[0]['meanings'].length; i++) { //instantiates the 1d array of wordData
-            if (!newDefList[i]) newDefList[i] = [];
+        if(!newDefList[key]) newDefList[key] = [];
 
-            for (let j = 0; j < wordData[0]['meanings'][i]['definitions'].length; j++) {
-                if (!newDefList[i][j]) newDefList[i][j] = [];
+        for (let i = 0; i < wordData[key]['meanings'].length; i++) { //instantiates the 1d array of wordData
+            if (!newDefList[key][i]) newDefList[key][i] = [];
 
-                newDefList[i][j][0] = wordData[0]['meanings'][i]['definitions'][j]['definition'];
-                newDefList[i][j][1] = wordData[0]['meanings'][i]['definitions'][j]['antonyms'];
-                newDefList[i][j][2] = wordData[0]['meanings'][i]['definitions'][j]['example'];
-                newDefList[i][j][3] = wordData[0]['meanings'][i]['definitions'][j]['synonyms'];
+            for (let j = 0; j < wordData[key]['meanings'][i]['definitions'].length; j++) {
+                if (!newDefList[key][i][j]) newDefList[key][i][j] = [];
+
+                console.log("Key: " + key + " I: " + i + " J: " + j);
+
+                newDefList[key][i][j][0] = wordData[key]['meanings'][i]['definitions'][j]['definition'];
+                newDefList[key][i][j][1] = wordData[key]['meanings'][i]['definitions'][j]['antonyms'];
+                newDefList[key][i][j][2] = wordData[key]['meanings'][i]['definitions'][j]['example'];
+                newDefList[key][i][j][3] = wordData[key]['meanings'][i]['definitions'][j]['synonyms'];
             }
             console.log("NEW DEF LIST");
             console.log(newDefList);
